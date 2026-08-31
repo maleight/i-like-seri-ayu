@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Like Seri Ayu World</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f3e9;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Animasi Latar Belakang Kuih Seri Ayu */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-kuih {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: 0.85;
+      animation: floatMove 12s infinite linear;
+    }
+
+    .kuih1 { top: 10%; left: -100px; animation-duration: 14s; animation-delay: 0s; }
+    .kuih2 { top: 35%; left: -100px; animation-duration: 10s; animation-delay: 3s; }
+    .kuih3 { top: 65%; left: -100px; animation-duration: 16s; animation-delay: 1s; }
+    .kuih4 { top: 85%; left: -100px; animation-duration: 12s; animation-delay: 5s; }
+
+    @keyframes floatMove {
+      0% { transform: translateX(0) rotate(0deg) scale(0.9); }
+      50% { transform: translateX(60vw) rotate(180deg) scale(1.1); }
+      100% { transform: translateX(120vw) rotate(360deg) scale(0.9); }
+    }
+
+    /* Bekas Utama & Navigasi Halaman */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .main-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #2d6a4f;
+      text-shadow: 3px 3px 0px #b7e4c7, 6px 6px 0px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+      animation: bounceTitle 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes bounceTitle {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Kad Utama / Home Grid */
+    .content-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 25px;
+      width: 320px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 2px solid #d8f3dc;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(45, 106, 79, 0.2);
+    }
+
+    .card h3 {
+      color: #1b4332;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 24px;
+      background-color: #52b788;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+
+    .btn:hover {
+      background-color: #2d6a4f;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      background-color: #a8dadc;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background-color: #74c69d;
+      margin-bottom: 20px;
+    }
+
+    /* Halaman Resepi */
+    .recipe-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 35px;
+      max-width: 750px;
+      margin: 0 auto;
+      text-align: left;
+      border: 2px solid #d8f3dc;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .recipe-box h2 {
+      color: #1b4332;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .recipe-box h3 {
+      color: #2d6a4f;
+      margin: 20px 0 10px 0;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #d8f3dc;
+      padding-bottom: 5px;
+    }
+
+    .recipe-box ul, .recipe-box ol {
+      margin-left: 20px;
+      color: #444;
+      line-height: 1.8;
+    }
+
+    .recipe-box li {
+      margin-bottom: 8px;
+    }
+
+    /* Halaman Galeri & Grid Gambar */
+    .gallery-upload-form {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto 30px auto;
+      border: 2px dashed #52b788;
+    }
+
+    .gallery-upload-form input[type="file"] {
+      margin-bottom: 10px;
+    }
+
+    .upload-status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #2d6a4f;
+      font-weight: bold;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      width: 100%;
+      border-radius: 15px;
+      overflow: hidden;
+      background: transparent;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: transform 0.25s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      border-radius: 15px;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(217, 4, 41, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, transform 0.1s ease;
+      z-index: 3;
+    }
+
+    .delete-btn:hover {
+      background: rgba(217, 4, 41, 1);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-animation">
+    <svg class="floating-kuih kuih1" viewBox="0 0 100 100">
+      <path d="M 20,50 Q 20,20 50,20 Q 80,20 80,50 Q 80,80 50,80 Q 20,80 20,50 Z" fill="#74c69d" />
+      <circle cx="50" cy="50" r="22" fill="#ffffff" />
+      <circle cx="50" cy="50" r="10" fill="#2d6a4f" />
+    </svg>
+
+    <svg class="floating-kuih kuih2" viewBox="0 0 100 100">
+      <path d="M 15,50 Q 15,15 50,15 Q 85,15 85,50 Q 85,85 50,85 Q 15,85 15,50 Z" fill="#52b788" />
+      <circle cx="50" cy="50" r="24" fill="#f8f9fa" />
+      <circle cx="50" cy="50" r="12" fill="#1b4332" />
+    </svg>
+
+    <svg class="floating-kuih kuih3" viewBox="0 0 100 100">
+      <path d="M 20,50 Q 20,20 50,20 Q 80,20 80,50 Q 80,80 50,80 Q 20,80 20,50 Z" fill="#74c69d" />
+      <circle cx="50" cy="50" r="22" fill="#ffffff" />
+      <circle cx="50" cy="50" r="10" fill="#2d6a4f" />
+    </svg>
+
+    <svg class="floating-kuih kuih4" viewBox="0 0 100 100">
+      <path d="M 15,50 Q 15,15 50,15 Q 85,15 85,50 Q 85,85 50,85 Q 15,85 15,50 Z" fill="#40916c" />
+      <circle cx="50" cy="50" r="25" fill="#ffffff" />
+      <circle cx="50" cy="50" r="11" fill="#1b4332" />
+    </svg>
+  </div>
+
+  <div class="container">
+    <h1 class="main-title">I like Seri Ayu</h1>
+
+    <div id="home-page" class="page-section active">
+      <div class="content-grid">
+        <div class="card">
+          <h3>Resepi Tradisional</h3>
+          <p>Kuih Seri Ayu yang lembut dikukus dengan aroma daun pandan wangi dan lapisan kelapa parut bergaram.</p>
+          <button class="btn" onclick="showPage('recipe-page')">Lihat Resepi</button>
+        </div>
+
+        <div class="card">
+          <h3>Galeri & Grafik</h3>
+          <p>Koleksi animasi, seni digital, dan ruang muat naik gambar Kuih Seri Ayu secara fleksibel.</p>
+          <button class="btn" onclick="showPage('gallery-page')">Terokai Galeri</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="recipe-page" class="page-section">
+      <button class="btn btn-secondary" onclick="showPage('home-page')">← Kembali ke Utama</button>
+      <div class="recipe-box">
+        <h2>Resepi Tradisional Kuih Seri Ayu</h2>
+        
+        <h3>Bahan-Bahan Lapisan Kelapa:</h3>
+        <ul>
+          <li>1 cawan kelapa parut putih (bahagian putih sahaja)</li>
+          <li>1 sudu kecil tepung ubi kayu (supaya kelapa melekat)</li>
+          <li>1/2 sudu kecil garam halus</li>
+        </ul>
+
+        <h3>Bahan-Bahan Adunan Kuih:</h3>
+        <ul>
+          <li>2 cawan tepung gandum (diayak)</li>
+          <li>1 cawan gula pasir</li>
+          <li>2 biji telur (gred A/B)</li>
+          <li>1 cawan santan cair</li>
+          <li>1/2 cawan air perahan daun pandan asli (atau pewarna hijau + perisa pandan)</li>
+          <li>1 sudu kecil ovalette</li>
+        </ul>
+
+        <h3>Langkah 1: Penyediaan Kelapa</h3>
+        <ol>
+          <li>Gaulkan kelapa parut putih bersama garam halus dan tepung ubi sehingga sebati.</li>
+          <li>Sapukan sedikit minyak masak pada acuan kuih Seri Ayu.</li>
+          <li>Tekan sedikit kelapa parut ke dalam dasar acuan sehingga padat (anggaran 1/4 acuan). Setkan ke tepi.</li>
+        </ol>
+
+        <h3>Langkah 2: Penyediaan Adunan & Cara Memasak</h3>
+        <ol>
+          <li>Pukul telur, gula pasir, dan ovalette menggunakan mikser pada kelajuan tinggi sehingga kembang, gebu, dan bertukar warna putih berkarim (anggaran 8-10 minit).</li>
+          <li>Perlahankan mikser. Masukkan santan dan air daun pandan secara berselang-seli dengan tepung gandum yang telah diayak. Adun hingga rata dan tiada ketulan.</li>
+          <li>Tuangkan adunan pandan ke dalam acuan yang berisi kelapa tadi sehingga hampir penuh (3/4 acuan).</li>
+          <li>Panaskan pengukus sehingga air mendidih. Balut penutup kukusan dengan kain bersih supaya air wap tidak menitis ke atas kuih.</li>
+          <li>Kukus kuih dengan api sederhana selama 10 hingga 15 minit sehingga masak sepenuhnya.</li>
+          <li>Keluarkannya dari pengukus dan biarkan sejuk seketika sebelum dikeluarkan dari acuan. Sedia untuk dihidangkan!</li>
+        </ol>
+      </div>
+    </div>
+
+    <div id="gallery-page" class="page-section">
+      <button class="btn btn-secondary" onclick="showPage('home-page')">← Kembali ke Utama</button>
+      
+      <div class="gallery-upload-form">
+        <h3 style="color: #1b4332; margin-bottom: 10px;">Tambah Gambar ke Galeri</h3>
+        <input type="file" id="imageInput" accept="image/*" multiple>
+        <br>
+        <button id="uploadBtn" class="btn" onclick="addImages()">Muat Naik Gambar</button>
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+
+      <div id="galleryGrid" class="gallery-grid"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzaAy06Ajmn_RuDQEMGePCfQ6O0fw9hNrrNVRIDrZvX34IbtZjtG8xDgcXgTi83Az6/exec';
+
+    document.addEventListener('DOMContentLoaded', loadSavedImages);
+
+    function showPage(pageId) {
+      const sections = document.querySelectorAll('.page-section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    function loadSavedImages() {
+      const savedImages = JSON.parse(localStorage.getItem('seriAyuGallery')) || [];
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      
+      savedImages.forEach(imgData => {
+        createGalleryCard(imgData.url, imgData.name, imgData.id);
+      });
+    }
+
+    async function addImages() {
+      const input = document.getElementById('imageInput');
+      const status = document.getElementById('uploadStatus');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const files = input.files;
+
+      if (files.length === 0) {
+        alert('Sila pilih sekurang-kurangnya satu gambar.');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      status.innerText = 'Sedang memuat naik...';
+
+      for (let file of files) {
+        try {
+          let imageUrl = '';
+          
+          if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+            const base64Data = await convertFileToBase64(file);
+            const payload = { file: base64Data, name: file.name, mimeType: file.type };
+
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+              imageUrl = result.url;
+            }
+          }
+
+          if (!imageUrl) {
+            imageUrl = await convertFileToBase64(file);
+          }
+
+          const imageId = 'img_' + Date.now() + Math.random().toString(36).substr(2, 4);
+
+          createGalleryCard(imageUrl, file.name, imageId);
+          saveImageToStorage({ id: imageId, url: imageUrl, name: file.name });
+
+        } catch (error) {
+          console.error('Ralat muat naik:', error);
+          alert('Berlaku ralat semasa muat naik gambar: ' + file.name);
+        }
+      }
+
+      status.innerText = 'Muat naik selesai!';
+      uploadBtn.disabled = false;
+      input.value = '';
+      setTimeout(() => { status.innerText = ''; }, 3000);
+    }
+
+    function createGalleryCard(url, altText, id) {
+      const grid = document.getElementById('galleryGrid');
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.setAttribute('data-id', id);
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = altText || 'Gambar Seri Ayu';
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.innerHTML = '&times;';
+      delBtn.onclick = function() {
+        item.remove();
+        removeImageFromStorage(id);
+      };
+
+      item.appendChild(img);
+      item.appendChild(delBtn);
+      grid.appendChild(item);
+    }
+
+    function convertFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function saveImageToStorage(imageData) {
+      const saved = JSON.parse(localStorage.getItem('seriAyuGallery')) || [];
+      saved.push(imageData);
+      localStorage.setItem('seriAyuGallery', JSON.stringify(saved));
+    }
+
+    function removeImageFromStorage(id) {
+      let saved = JSON.parse(localStorage.getItem('seriAyuGallery')) || [];
+      saved = saved.filter(img => img.id !== id);
+      localStorage.setItem('seriAyuGallery', JSON.stringify(saved));
+    }
+  </script>
+</body>
+</html>
