@@ -408,42 +408,41 @@
       }
 
       uploadBtn.disabled = true;
-      status.innerText = 'Sedang memuat naik...';
+      status.innerText = 'Sedang memuat naik ke Google Drive...';
 
       for (let file of files) {
         try {
-          let imageUrl = '';
-          
-          if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
-            const base64Data = await convertFileToBase64(file);
-            const payload = { file: base64Data, name: file.name, mimeType: file.type };
+          const base64Data = await convertFileToBase64(file);
+          const payload = { file: base64Data, name: file.name, mimeType: file.type };
 
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-              method: 'POST',
-              body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.status === 'success') {
-              imageUrl = result.url;
-            }
+          // 1. Upload to Google Drive via Apps Script
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+
+          if (result.status === 'success' || result.url) {
+            // Drive direct viewable URL or fallback
+            const driveUrl = result.url;
+            const imageId = 'img_' + Date.now() + Math.random().toString(36).substr(2, 4);
+
+            // 2. Save only lightweight URL to LocalStorage (prevents 5MB quota crash)
+            saveImageToStorage({ id: imageId, url: driveUrl, name: file.name });
+            
+            // 3. Render directly in preview grid
+            createGalleryCard(driveUrl, file.name, imageId);
+          } else {
+            alert('Gagal memuat naik ke Google Drive: ' + file.name);
           }
-
-          if (!imageUrl) {
-            imageUrl = await convertFileToBase64(file);
-          }
-
-          const imageId = 'img_' + Date.now() + Math.random().toString(36).substr(2, 4);
-
-          createGalleryCard(imageUrl, file.name, imageId);
-          saveImageToStorage({ id: imageId, url: imageUrl, name: file.name });
 
         } catch (error) {
           console.error('Ralat muat naik:', error);
-          alert('Berlaku ralat semasa muat naik gambar: ' + file.name);
+          alert('Berlaku ralat semasa muat naik: ' + file.name);
         }
       }
 
-      status.innerText = 'Muat naik selesai!';
+      status.innerText = 'Muat naik berjaya & disimpan!';
       uploadBtn.disabled = false;
       input.value = '';
       setTimeout(() => { status.innerText = ''; }, 3000);
@@ -458,11 +457,17 @@
       const img = document.createElement('img');
       img.src = url;
       img.alt = altText || 'Gambar Seri Ayu';
+      img.onerror = function() {
+        // Fallback if Google Drive permission blocks direct display
+        this.src = 'https://via.placeholder.com/300x200?text=Gambar+Di+Google+Drive';
+      };
 
       const delBtn = document.createElement('button');
       delBtn.className = 'delete-btn';
       delBtn.innerHTML = '&times;';
+      delBtn.title = 'Padamkan dari pratonton web sahaja';
       delBtn.onclick = function() {
+        // Deletes only from website display and browser storage (Drive file stays intact)
         item.remove();
         removeImageFromStorage(id);
       };
